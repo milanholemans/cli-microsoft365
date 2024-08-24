@@ -4,6 +4,7 @@ import type { Options as ClientRedirectsOptions } from '@docusaurus/plugin-clien
 import LightCodeTheme from './src/config/lightCodeTheme';
 import DarkCodeTheme from './src/config/darkCodeTheme';
 import definitionList from './src/remark/definitionLists';
+import { app } from '../src/utils/app.js';
 
 const config: Config = {
   title: 'CLI for Microsoft 365',
@@ -71,7 +72,17 @@ const config: Config = {
           sidebarPath: './src/config/sidebars.ts',
           editUrl: 'https://github.com/pnp/cli-microsoft365/blob/main/docs',
           showLastUpdateTime: true,
-          remarkPlugins: [definitionList]
+          remarkPlugins: [definitionList],
+          lastVersion: 'current',
+          versions: {
+            current: {
+              label: `v${app.packageJson().version}`,
+            },
+            '9.0.0': {
+              label: 'v9',
+              banner: 'unreleased'
+            }
+          }
         },
         blog: false,
         theme: {
@@ -139,6 +150,10 @@ const config: Config = {
             label: 'About',
             sidebarId: 'about',
             position: 'left'
+          },
+          {
+            type: 'docsVersionDropdown',
+            position: 'right'
           },
           {
             href: 'https://github.com/pnp/cli-microsoft365',
