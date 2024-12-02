@@ -1,0 +1,266 @@
+# Using CLI for Microsoft 365 in an Azure Function with PowerShell
+
+This guide will walk you through setting up an Azure Function that uses PowerShell to run scripts leveraging CLI for Microsoft 365. We'll start from scratch, covering all necessary Azure resources, permissions, and configurations.
+
+## Prerequisites
+
+In order to follow this guide smoothly, we assume that certain things are already present in your environment.
+The tools listed below are used in this guide. While they are not mandatory to use, they are recommended when you are following this guide.
+
+- [Visual Studio Code](https://code.visualstudio.com)
+
+Apart from this IDE, you will need the following extensions for Visual Studio Code:
+
+- [Azure Resources extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azureresourcegroups)
+- [Azure Functions extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions)
+
+## Setting up Azure resources
+
+1. Navigate to the [Azure portal](https://portal.azure.com).
+
+1. Create a new resource group.
+
+    Create a new resource group by searching for "resource group" in the search bar and clicking on the **Create** button. Pick a suitable name and location for your resource group.
+
+    ![Create a resource group](../../images/azure-function-powershell-guide/create-resource-group.png)
+
+1. Create a new Function App.
+
+    Create a new Azure Function App in the resource group you just created.
+
+    ![Create a Function App](../../images/azure-function-powershell-guide/create-function-app.png)
+
+    In this guide, we are creating an Azure Function with a consumption plan. Fill out the required fields of the form and click on the **review + create** button.
+    While CLI for Microsoft 365 works on multiple platforms, this guide only explains the setup on a PowerShell Azure Function running on **Windows**.
+
+    ![Function App form](../../images/azure-function-powershell-guide/function-app-form.png)
+
+1. Wait for the creation to complete and open the Azure Function app.
+
+1. Setup the environment variables.
+
+    Navigate to the **environment variables** tab.
+    Over there, add a new environment variable with name `WEBSITE_NODE_DEFAULT_VERSION` and value `~20` to set the right Node version.
+    Finally press **apply*.
+
+    :::note
+
+    At the time of writing, the LTS version of Node.js is v20.
+    We recommend to run CLI for Microsoft 365 on the LTS version of Node.js.
+    Visit the [website of Node.js](https://nodejs.org) to discover the current LTS version of Node.js and update the `WEBSITE_NODE_DEFAULT_VERSION` environment variable accordingly.
+
+    :::
+
+    ![Setting Node environment variable](../../images/azure-function-powershell-guide/environment-variable-node.png)
+
+    :::tip
+
+    To prevent automatic update checks in your Azure Function, add an additional environment variable with name `CLIMICROSOFT365_NOUPDATE` and value `1`.
+    This will prevent CLI from checking if new versions are available, not giving you unwanted update notifications in your logs.
+
+    :::
+
+1. Reboot the Azure Function.
+
+    On the overview tab of your Azure Function, reboot your Azure Function in order to use the new Node version.
+
+    ![Reboot Azure Function](../../images/azure-function-powershell-guide/reboot-function.png)
+
+This is it, you have now created an Azure Function App with the right Node version.
+
+## Setting up local project
+
+1. Use the right Node.js version.
+
+    On your local environment, make sure that you have the same Node.js version installed as configured on the Azure Function app.
+
+1. Create a new Azure Function project.
+
+    Using the Azure plugin from Visual Studio Code, let's create a new Azure Function project.
+    Select `PowerShell` as the language and `HTTP trigger` as the template. For this demo, let's use authorization level `anonymous`.
+
+    ![Create new project](../../images/azure-function-powershell-guide/create-new-project.png)
+
+1. Create `package.json` file in the root of the project.
+
+    To use CLI for Microsoft 365 in this Azure Function, we have to install it locally in the project. When everything is ready to go, we will publish CLI for Microsoft 365 with out code to the Azure Function.
+    This will prevent the need to install the CLI for Microsoft 365 on the Azure Function itself at every execution.
+    The easiest way to do achieve this is by creating a `package.json` file in the root of your project project (or run `npm init`).
+    Make sure your file looks like this (choose your own project name and version):
+
+    ```json title="package.json"
+    {
+      "name": "azure-function-cli-microsoft-365",
+      "version": "1.0.0"
+    }
+    ```
+
+1. Install CLI for Microsoft 365 in the project.
+
+    Run the following command in your terminal at the root of your project. This will install the CLI for Microsoft 365 in the project locally.
+
+    ```sh
+    npm i @pnp/cli-microsoft365
+    ```
+
+1. Update `profile.ps1` file.
+
+    The `profile.ps1` file is a script that runs every time your function app starts up on a new instance.
+    This behavior is similar to how PowerShell profiles work on your local machine but tailored for the Azure Functions environment.
+    The primary purpose of `profile.ps1` is to allow you to run initialization code for your function app.
+    This could include setting up environment variables, loading custom modules, or executing any startup tasks required before your functions can run.
+    In the case of CLI for Microsoft 365, we need to make sure that the CLI is available in the context of the Azure Function.
+
+    Overwrite the content of the `profile.ps1` file with the following content:
+
+    ```powershell title="profile.ps1"
+    # Ensure CLI for Microsoft 365 environment path is available in the Azure Function
+    # This way, PowerShell will understand where to find the CLI for Microsoft 365
+    $functionPath = "$PSScriptRoot\node_modules\.bin" 
+    if ($Env:PATH.Contains($functionPath) -eq $false) {
+      [System.Environment]::SetEnvironmentVariable('PATH', $Env:PATH + ";$functionPath")
+    }
+
+    # Ensure CLI for Microsoft 365 is configured properly for executing in Azure Function.
+    m365 setup --scripting --skipApp
+    $status = m365 status | ConvertFrom-Json
+    if ($status -eq "Logged out") {
+      # Use Azure managed identity to authenticate
+      m365 login --authType identity
+      # The next line is not mandatory, but it's a good practice to set the URL of your tenant.
+      # This way CLI for Microsoft 365 doesn't need extra permissions to discover your SharePoint root URL.
+      m365 spo set --url "https://contoso.sharepoint.com"
+    }
+    ```
+
+## Creating a new function
+
+Open the `Azure` tab in Visual Studio Code and click on the `Create Function` button to create a new Function.
+
+![Create new function](../../images/azure-function-powershell-guide/create-new-function.png)
+
+### HTTP trigger
+
+1. Create a new HTTP trigger function.
+
+    Choose `HTTP trigger` as the template and give it a proper name. For this demo, let's use `GetSitesFromHub`.
+    For the sake of this demo, let's use authorization level `anonymous`.
+
+1. Configure the Azure Function.
+
+    Creating a new Azure Function will create a new folder in your project with the name of the function.
+    Open the `function.json` file in this folder to configure your function.
+    In this demo, we want to use the `GET` method. Let's modify the file so it looks like this:
+
+    ```json title="/GetSitesFromHub/function.json"
+    {
+      "bindings": [
+        {
+          "authLevel": "anonymous",
+          "type": "httpTrigger",
+          "direction": "in",
+          "name": "Request",
+          "methods": [
+            "get"
+          ]
+        },
+        {
+          "type": "http",
+          "direction": "out",
+          "name": "Response"
+        }
+      ]
+    }
+    ```
+
+1. Add your code to the Azure Function.
+
+    Open the `run.ps1` file in the function folder and add your code.
+    In this demo, we'll create an HTTP endpoint that returns all sites that are linked to a specific hub site.
+
+    <details>
+      <summary>Click here to see the demo code</summary>
+      ```powershell title="/GetSitesFromHub/run.ps1"
+      using namespace System.Net
+
+      param($Request, $TriggerMetadata)
+
+      $hubSiteUrl = $Request.Query.Url
+
+      Write-Host "Hub site URL: '$hubSiteUrl'."
+      $hubSite = m365 spo site get --url "$hubSiteUrl" | ConvertFrom-Json
+
+      Write-Host "Hub site ID: '$($hubSite.Id)'."
+      $sites = m365 spo tenant site list --query "[?HubSiteId == '/Guid($($hubSite.Id))/']" | ConvertFrom-Json
+      
+      Write-Host "Return '$($sites.Count)' linked sites."
+      Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
+        StatusCode = [HttpStatusCode]::OK
+        Body = $sites
+      })
+      ```
+    </details>
+
+### Timer trigger
+
+1. Create a new timer trigger function.
+
+    Choose `Timer trigger` as the template and give it a proper name. For this demo, let's use `GroupStats`.
+    For the sake of this demo, let's use schedule `0 0 6 * * Mon` to run it every Monday at 6 AM.
+
+1. Add your code to the Azure Function.
+
+    Open the `run.ps1` file in the function folder and add your code.
+    In this demo, we'll create a timer trigger that lists all orphaned Microsoft Entra groups and sends an email with an overview every Monday at 6 AM.
+
+    <details>
+      <summary>Click here to see the demo code</summary>
+      ```powershell title="/GroupStats/run.ps1"
+      param($Timer)
+
+      Write-Host "PowerShell Timer trigger function executed at: '$((Get-Date).ToString('yyyy-MM-dd HH:mm'))'"
+
+      # Get all groups
+      $groups = m365 entra group list | ConvertFrom-Json
+
+      Write-Host "Found $($groups.Length) groups."
+
+      $m365Groups = $groups | Where-Object { $_.groupTypes.Length -gt 0 -and $_.groupTypes.Contains('Unified') }
+      $mailSecurityGroups = $groups | Where-Object { $_.mailEnabled -and $_.securityEnabled -and $_.groupTypes.Length -eq 0 }
+      $securityGroups = $groups | Where-Object { $_.securityEnabled -and -not $_.mailEnabled }
+      $distributionGroups = $groups | Where-Object { $_.mailEnabled -and -not $_.securityEnabled }
+
+      $message = @"
+      <p>There are a total of <b>$($m365Groups.Length)</b> Microsoft 365 groups.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Group type</th>
+            <th>Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Microsoft 365</td>
+            <td>$($m365Groups.Length)</td>
+          </tr>
+          <tr>
+            <td>Security</td>
+            <td>$($securityGroups.Length)</td>
+          </tr>
+          <tr>
+            <td>Mail enabled security</td>
+            <td>$($mailSecurityGroups.Length)</td>
+          </tr>
+          <tr>
+            <td>Distribution</td>
+            <td>$($distributionGroups.Length)</td>
+          </tr>
+        </tbody>
+      </table>
+      "@
+
+      # Send an email with the stats
+      m365 outlook mail send --subject "Microsoft Entra group stats" --to "admin@milanhdev.onmicrosoft.com" --sender "admin@milanhdev.onmicrosoft.com" --bodyContents "$message" --bodyContentType HTML --importance high
+      ```
+    </details>
