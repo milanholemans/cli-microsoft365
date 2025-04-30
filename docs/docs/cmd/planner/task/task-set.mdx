@@ -100,6 +100,23 @@ When using `rosterId`, the command is based on an API that is currently in previ
 
 :::
 
+<Tabs>
+  <TabItem value="Delegated">
+
+  Scope | Permissions
+  --- | ---
+  Microsoft Graph | `Tasks.ReadWrite`<br />`GroupMember.Read.All`<br />`User.Read`
+
+  </TabItem>
+  <TabItem value="Application">
+
+  Scope | Permissions
+  --- | ---
+  Microsoft Graph | `Tasks.ReadWrite.All`<br />`GroupMember.Read.All`<br />`User.Read.All`
+
+  </TabItem>
+</Tabs>
+
 ## Examples
 
 Updates a Microsoft Planner task name of the specified task by ID.
