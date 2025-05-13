@@ -16,9 +16,20 @@ function convertHeadings(md: string): string {
 }
 
 function convertAdmonitions(md: string): string {
-  const regex = new RegExp(/^:::(\w+)(?:\[([^\]]+)\])?([\s\S]*?):::$/, 'gm');
-  return md.replace(regex, (_, label: string, title: string | undefined, content: string) =>
-    label.toLocaleUpperCase() + (title ? EOL + EOL + title : '') + EOL + EOL + content.trim());
+  const regex = new RegExp(/^([ \t]*):::(\w+)(?:\[([^\]]+)\])?([\s\S]*?)^\1:::$/, 'gm');
+  return md.replace(regex, (_, indent: string | undefined, label: string, title: string | undefined, content: string) =>
+    indent + label.toLocaleUpperCase() + (title ? EOL + EOL + indent + title : '') + EOL + EOL + indent + content.trim());
+}
+
+function convertTables(md: string): string {
+  const regex = new RegExp(/^([ \t]*```md(?:(?!```)[\s\S])+)?([ \t]*[^|\r\n]+?\|[^|\r\n]+?)[ \t]*\r?\n([ \t]*[-:]+[ \t]*\|[ \t]*[-:]+)[ \t]*\r?\n(([ \t]*.+?\|[ \t]*.+?(?:\r?\n|$))+)/, 'gm');
+  return md.replace(regex, (_match: string, codeFenceStart: string | undefined, header: string, divider: string, body: string): string => {
+    if (codeFenceStart) {
+      return _match;
+    }
+
+    return header + EOL + body;
+  });
 }
 
 function includeContent(md: string, rootFolder: string): string {
@@ -63,7 +74,7 @@ function convertHyperlinks(md: string): string {
 function convertContentTabs(md: string): string {
   return md
     .replace(/<TabItem value="([^"]+)">/gm, '$1')
-    .replace(/.*<\/?(Tabs|TabItem)>.*\n?/g, '')
+    .replace(/.*\n?<\/?(Tabs|TabItem)>.*\n?/g, '')
     .replace(/```(?:\w+)?\s*([\s\S]*?)\s*```/g, '$1')
     .trim();
 }
@@ -107,6 +118,7 @@ const convertFunctions = [
   convertTitle,
   convertHeadings,
   convertAdmonitions,
+  convertTables,
   convertDd,
   convertHyperlinks,
   convertCodeFences,
