@@ -21,17 +21,6 @@ function convertAdmonitions(md: string): string {
     indent + label.toLocaleUpperCase() + (title ? EOL + EOL + indent + title : '') + EOL + EOL + indent + content.trim());
 }
 
-function convertTables(md: string): string {
-  const regex = new RegExp(/^([ \t]*```md(?:(?!```)[\s\S])+)?([ \t]*[^|\r\n]+?\|[^|\r\n]+?)[ \t]*\r?\n([ \t]*[-:]+[ \t]*\|[ \t]*[-:]+)[ \t]*\r?\n(([ \t]*.+?\|[ \t]*.+?(?:\r?\n|$))+)/, 'gm');
-  return md.replace(regex, (_match: string, codeFenceStart: string | undefined, header: string, divider: string, body: string): string => {
-    if (codeFenceStart) {
-      return _match;
-    }
-
-    return header + EOL + body;
-  });
-}
-
 function includeContent(md: string, rootFolder: string): string {
   const mdxImports = [
     { tag: "<Global />", location: "docs/cmd/_global.mdx" },
@@ -118,7 +107,6 @@ const convertFunctions = [
   convertTitle,
   convertHeadings,
   convertAdmonitions,
-  convertTables,
   convertDd,
   convertHyperlinks,
   convertCodeFences,
