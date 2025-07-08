@@ -362,21 +362,21 @@
       }
     },
     "node_modules/@azure/msal-common": {
-      "version": "15.7.0",
-      "resolved": "https://registry.npmjs.org/@azure/msal-common/-/msal-common-15.7.0.tgz",
-      "integrity": "sha512-m9M5hoFoxhe/HlXNVa4qBHekrX60CVPkWzsjhKQGuzw/OPOmurosKRPDIMn8fug/E1hHI5v33DvT1LVJfItjcg==",
+      "version": "15.8.1",
+      "resolved": "https://registry.npmjs.org/@azure/msal-common/-/msal-common-15.8.1.tgz",
+      "integrity": "sha512-ltIlFK5VxeJ5BurE25OsJIfcx1Q3H/IZg2LjV9d4vmH+5t4c1UCyRQ/HgKLgXuCZShs7qfc/TC95GYZfsUsJUQ==",
       "license": "MIT",
       "engines": {
         "node": ">=0.8.0"
       }
     },
     "node_modules/@azure/msal-node": {
-      "version": "3.6.0",
-      "resolved": "https://registry.npmjs.org/@azure/msal-node/-/msal-node-3.6.0.tgz",
-      "integrity": "sha512-MRZ38Ou6l9LiRkz/968mG0czfIvD1PxMZ/3Jyz5k00ZMnhNOwv+DIliEcy//laoWDobAAq+/cz97xefCcHPgjg==",
+      "version": "3.6.3",
+      "resolved": "https://registry.npmjs.org/@azure/msal-node/-/msal-node-3.6.3.tgz",
+      "integrity": "sha512-95wjsKGyUcAd5tFmQBo5Ug/kOj+hFh/8FsXuxluEvdfbgg6xCimhSP9qnyq6+xIg78/jREkBD1/BSqd7NIDDYQ==",
       "license": "MIT",
       "dependencies": {
-        "@azure/msal-common": "15.7.0",
+        "@azure/msal-common": "15.8.1",
         "jsonwebtoken": "^9.0.0",
         "uuid": "^8.3.0"
       },
@@ -638,12 +638,12 @@
       "license": "BSD-3-Clause"
     },
     "node_modules/@inquirer/confirm": {
-      "version": "5.1.12",
-      "resolved": "https://registry.npmjs.org/@inquirer/confirm/-/confirm-5.1.12.tgz",
-      "integrity": "sha512-dpq+ielV9/bqgXRUbNH//KsY6WEw9DrGPmipkpmgC1Y46cwuBTNx7PXFWTjc3MQ+urcc0QxoVHcMI0FW4Ok0hg==",
+      "version": "5.1.13",
+      "resolved": "https://registry.npmjs.org/@inquirer/confirm/-/confirm-5.1.13.tgz",
+      "integrity": "sha512-EkCtvp67ICIVVzjsquUiVSd+V5HRGOGQfsqA4E4vMWhYnB7InUL0pa0TIWt1i+OfP16Gkds8CdIu6yGZwOM1Yw==",
       "license": "MIT",
       "dependencies": {
-        "@inquirer/core": "^10.1.13",
+        "@inquirer/core": "^10.1.14",
         "@inquirer/type": "^3.0.7"
       },
       "engines": {
@@ -659,9 +659,9 @@
       }
     },
     "node_modules/@inquirer/core": {
-      "version": "10.1.13",
-      "resolved": "https://registry.npmjs.org/@inquirer/core/-/core-10.1.13.tgz",
-      "integrity": "sha512-1viSxebkYN2nJULlzCxES6G9/stgHSepZ9LqqfdIGPHj5OHhiBUXVS0a6R0bEC2A+VL4D9w6QB66ebCr6HGllA==",
+      "version": "10.1.14",
+      "resolved": "https://registry.npmjs.org/@inquirer/core/-/core-10.1.14.tgz",
+      "integrity": "sha512-Ma+ZpOJPewtIYl6HZHZckeX1STvDnHTCB2GVINNUlSEn2Am6LddWwfPkIGY0IUFVjUUrr/93XlBwTK6mfLjf0A==",
       "license": "MIT",
       "dependencies": {
         "@inquirer/figures": "^1.0.12",
@@ -695,12 +695,12 @@
       }
     },
     "node_modules/@inquirer/input": {
-      "version": "4.1.12",
-      "resolved": "https://registry.npmjs.org/@inquirer/input/-/input-4.1.12.tgz",
-      "integrity": "sha512-xJ6PFZpDjC+tC1P8ImGprgcsrzQRsUh9aH3IZixm1lAZFK49UGHxM3ltFfuInN2kPYNfyoPRh+tU4ftsjPLKqQ==",
+      "version": "4.2.0",
+      "resolved": "https://registry.npmjs.org/@inquirer/input/-/input-4.2.0.tgz",
+      "integrity": "sha512-opqpHPB1NjAmDISi3uvZOTrjEEU5CWVu/HBkDby8t93+6UxYX0Z7Ps0Ltjm5sZiEbWenjubwUkivAEYQmy9xHw==",
       "license": "MIT",
       "dependencies": {
-        "@inquirer/core": "^10.1.13",
+        "@inquirer/core": "^10.1.14",
         "@inquirer/type": "^3.0.7"
       },
       "engines": {
@@ -716,12 +716,12 @@
       }
     },
     "node_modules/@inquirer/select": {
-      "version": "4.2.3",
-      "resolved": "https://registry.npmjs.org/@inquirer/select/-/select-4.2.3.tgz",
-      "integrity": "sha512-OAGhXU0Cvh0PhLz9xTF/kx6g6x+sP+PcyTiLvCrewI99P3BBeexD+VbuwkNDvqGkk3y2h5ZiWLeRP7BFlhkUDg==",
+      "version": "4.2.4",
+      "resolved": "https://registry.npmjs.org/@inquirer/select/-/select-4.2.4.tgz",
+      "integrity": "sha512-unTppUcTjmnbl/q+h8XeQDhAqIOmwWYWNyiiP2e3orXrg6tOaa5DHXja9PChCSbChOsktyKgOieRZFnajzxoBg==",
       "license": "MIT",
       "dependencies": {
-        "@inquirer/core": "^10.1.13",
+        "@inquirer/core": "^10.1.14",
         "@inquirer/figures": "^1.0.12",
         "@inquirer/type": "^3.0.7",
         "ansi-escapes": "^4.3.2",
@@ -1933,18 +1933,18 @@
       }
     },
     "node_modules/@types/node": {
-      "version": "22.15.29",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-22.15.29.tgz",
-      "integrity": "sha512-LNdjOkUDlU1RZb8e1kOIUpN1qQUlzGkEtbVNo53vbrwDg5om6oduhm4SiUaPW5ASTXhAiP0jInWG8Qx9fVlOeQ==",
+      "version": "22.16.1",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-22.16.1.tgz",
+      "integrity": "sha512-oaNE4MzsA6uO7HcsjUvqzz19lYIRsV6I1Dc6iOvgwYYDiOeF7/9b2E/PE0UW2ccwpgWPVUedjltYXQXVKFd4EA==",
       "license": "MIT",
       "dependencies": {
         "undici-types": "~6.21.0"
       }
     },
     "node_modules/@types/node-forge": {
-      "version": "1.3.11",
-      "resolved": "https://registry.npmjs.org/@types/node-forge/-/node-forge-1.3.11.tgz",
-      "integrity": "sha512-FQx220y22OKNTqaByeBGqHWYz4cl94tpcxeFdvBo3wjG6XPBuZ0BNgNZRV5J5TFmmcsJ4IzsLkmGRiQbnYsBEQ==",
+      "version": "1.3.12",
+      "resolved": "https://registry.npmjs.org/@types/node-forge/-/node-forge-1.3.12.tgz",
+      "integrity": "sha512-a0ToKlRVnUw3aXKQq2F+krxZKq7B8LEQijzPn5RdFAMatARD2JX9o8FBpMXOOrjob0uc13aN+V/AXniOXW4d9A==",
       "dev": true,
       "license": "MIT",
       "dependencies": {
@@ -2548,9 +2548,9 @@
       }
     },
     "node_modules/axios": {
-      "version": "1.9.0",
-      "resolved": "https://registry.npmjs.org/axios/-/axios-1.9.0.tgz",
-      "integrity": "sha512-re4CqKTJaURpzbLHtIi6XpDv20/CnpXOtjRY5/CU32L8gU8ek9UIivcfvSWvmKEngmVbrUtPpdDwWDWL7DNHvg==",
+      "version": "1.10.0",
+      "resolved": "https://registry.npmjs.org/axios/-/axios-1.10.0.tgz",
+      "integrity": "sha512-/1xYAC4MP/HEG+3duIhFr4ZQXR4sQXOIe+o6sdqzeykGLx6Upp/1p8MHqhINOvGeP7xyNHe7tsiJByc4SSVUxw==",
       "license": "MIT",
       "dependencies": {
         "follow-redirects": "^1.15.6",
@@ -5067,9 +5067,9 @@
       }
     },
     "node_modules/mocha": {
-      "version": "11.5.0",
-      "resolved": "https://registry.npmjs.org/mocha/-/mocha-11.5.0.tgz",
-      "integrity": "sha512-VKDjhy6LMTKm0WgNEdlY77YVsD49LZnPSXJAaPNL9NRYQADxvORsyG1DIQY6v53BKTnlNbEE2MbVCDbnxr4K3w==",
+      "version": "11.7.1",
+      "resolved": "https://registry.npmjs.org/mocha/-/mocha-11.7.1.tgz",
+      "integrity": "sha512-5EK+Cty6KheMS/YLPPMJC64g5V61gIR25KsRItHw6x4hEKT6Njp1n9LOlH4gpevuwMVS66SXaBBpg+RWZkza4A==",
       "dev": true,
       "license": "MIT",
       "dependencies": {
@@ -5089,7 +5089,7 @@
         "serialize-javascript": "^6.0.2",
         "strip-json-comments": "^3.1.1",
         "supports-color": "^8.1.1",
-        "workerpool": "^6.5.1",
+        "workerpool": "^9.2.0",
         "yargs": "^17.7.2",
         "yargs-parser": "^21.1.1",
         "yargs-unparser": "^2.0.0"
@@ -6673,9 +6673,9 @@
       }
     },
     "node_modules/workerpool": {
-      "version": "6.5.1",
-      "resolved": "https://registry.npmjs.org/workerpool/-/workerpool-6.5.1.tgz",
-      "integrity": "sha512-Fs4dNYcsdpYSAfVxhnl1L5zTksjvOJxtC5hzMNl+1t9B8hTJTdKDyZ5ju7ztgPy+ft9tBFXoOlDNiOT9WUXZlA==",
+      "version": "9.3.3",
+      "resolved": "https://registry.npmjs.org/workerpool/-/workerpool-9.3.3.tgz",
+      "integrity": "sha512-slxCaKbYjEdFT/o2rH9xS1hf4uRDch1w7Uo+apxhZ+sf/1d9e0ZVkn42kPNGP2dgjIx6YFvSevj0zHvbWe2jdw==",
       "dev": true,
       "license": "Apache-2.0"
     },
@@ -6929,9 +6929,9 @@
       }
     },
     "node_modules/zod": {
-      "version": "3.25.48",
-      "resolved": "https://registry.npmjs.org/zod/-/zod-3.25.48.tgz",
-      "integrity": "sha512-0X1mz8FtgEIvaxGjdIImYpZEaZMrund9pGXm3M6vM7Reba0e2eI71KPjSCGXBfwKDPwPoywf6waUKc3/tFvX2Q==",
+      "version": "3.25.76",
+      "resolved": "https://registry.npmjs.org/zod/-/zod-3.25.76.tgz",
+      "integrity": "sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==",
       "license": "MIT",
       "funding": {
         "url": "https://github.com/sponsors/colinhacks"
