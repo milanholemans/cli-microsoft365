@@ -1,0 +1,28 @@
+version: 2
+updates:
+  # Monthly dependency updates
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels:
+      - pr-priority
+    ignore:
+      update-types:
+        - "version-update:semver-major"
+    groups:
+      update-dependencies:
+        patterns:
+          - "*"
+    open-pull-requests-limit: 1
+
+  # Major‑update notifier
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    ignore:
+      update-types:
+        - "version-update:semver-minor"
+        - "version-update:semver-patch"
+    open-pull-requests-limit: 0
