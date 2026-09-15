@@ -1,0 +1,115 @@
+# v12 Upgrade Guidance
+
+The v12 release of CLI for Microsoft 365 introduces several breaking changes. This guide outlines those changes and the actions you may need to take to upgrade smoothly from v11 to v12.
+
+## SharePoint Online
+
+### Removed SharePoint Alerts commands
+
+Microsoft is retiring SharePoint Alerts in July 2026. Because the underlying API is going away, we removed the commands that manage them, together with the tenant alert inventory sample script.
+
+Removed commands:
+
+- `spo web rule list` and its alias `spo web alert list`
+- `spo web rule remove` and its alias `spo web alert remove`
+
+#### What action do I need to take?
+
+Remove these commands from your scripts. There is no alternative in the CLI, so consider replacing alert-based scenarios with Power Automate.
+
+### Changed the default behavior of `spo file add`
+
+Previously, [spo file add](./cmd/spo/file/file-add.mdx) always overwrote a file when it already existed in the destination folder, which could silently replace content. The command now fails with an error when the file already exists, unless you explicitly specify the `--overwrite` option.
+
+#### What action do I need to take?
+
+Add `--overwrite` to your scripts wherever you intentionally replace existing files.
+
+### Removed default values from `spo page header set`
+
+Previously, [spo page header set](./cmd/spo/page/page-header-set.mdx) applied a default value to every option you didn't specify. As a result, updating a single header property silently reset all the other ones, for example the layout, the text alignment, or the topic header.
+
+The command now retrieves the existing page header and keeps the value of every property for which you didn't specify an option. Omitting `--type` no longer resets the header to `Default` either, it keeps the header type that's currently configured on the page.
+
+#### What action do I need to take?
+
+If you relied on the command resetting the header, specify the options explicitly. To reset a page header to its default configuration, use `--type Default`.
+
+### Updated `spo contenttype sync` to use SharePoint APIs
+
+The [spo contenttype sync](./cmd/spo/contenttype/contenttype-sync.mdx) command no longer uses Microsoft Graph. It now exclusively uses SharePoint APIs, which makes the command more reliable and consistent with the other `spo` commands.
+
+Because of this, the command no longer requires Microsoft Graph permissions. Instead, it requires SharePoint permissions:
+
+Permission type | v12 Permission
+--------------- | --------------
+Delegated | SharePoint `AllSites.Manage`
+Application | SharePoint `Sites.Manage.All`
+
+#### What action do I need to take?
+
+Grant your app registration the required SharePoint permissions listed above.
+
+### Renamed the `properties` option in `spo listitem get`
+
+To align [spo listitem get](./cmd/spo/listitem/listitem-get.mdx) with [spo listitem list](./cmd/spo/listitem/listitem-list.mdx), we renamed its `properties` option to `fields`.
+
+The `properties` option still works, but it's deprecated and will be removed in a future major version.
+
+#### What action do I need to take?
+
+Use `--fields` instead of `-p, --properties` in your scripts.
+
+## Teams
+
+### Updated how Teams commands retrieve a team by its name
+
+Several Teams commands resolved the `teamName` option using the Microsoft Entra groups endpoint and then verified that the group was team-enabled. These commands now use the Microsoft Teams endpoint directly, which is more accurate and requires fewer properties to be retrieved.
+
+**Affected commands:**
+
+- [teams channel list](./cmd/teams/channel/channel-list.mdx)
+- [teams channel member add](./cmd/teams/channel/channel-member-add.mdx)
+- [teams channel member list](./cmd/teams/channel/channel-member-list.mdx)
+- [teams channel member remove](./cmd/teams/channel/channel-member-remove.mdx)
+- [teams channel member set](./cmd/teams/channel/channel-member-set.mdx)
+- [teams channel remove](./cmd/teams/channel/channel-remove.mdx)
+- [teams channel set](./cmd/teams/channel/channel-set.mdx)
+- [teams tab get](./cmd/teams/tab/tab-get.mdx)
+- [teams team archive](./cmd/teams/team/team-archive.mdx)
+- [teams team remove](./cmd/teams/team/team-remove.mdx)
+- [teams team unarchive](./cmd/teams/team/team-unarchive.mdx)
+
+Because of this, resolving a team by its `teamName` now requires the Microsoft Graph `Team.ReadBasic.All` permission instead of the group permissions used previously, such as `Group.Read.All`.
+
+#### What action do I need to take?
+
+Grant your Microsoft Entra app registration the `Team.ReadBasic.All` permission.
+
+## General
+
+### Remove commands recycle items by default
+
+Removing something permanently should never be the default. Previously, several remove commands permanently deleted items unless you specified the `recycle` option. These commands now move items to the recycle bin by default, and you have to specify the new `permanent` option to delete them permanently.
+
+For consistency, we also renamed the `skipRecycleBin` option to `permanent` on the commands that already recycled items by default.
+
+Command | Old option | New option
+------- | ---------- | ----------
+[entra m365group remove](./cmd/entra/m365group/m365group-remove.mdx) | `skipRecycleBin` | `permanent`
+[spe container remove](./cmd/spe/container/container-remove.mdx) | `recycle` | `permanent`
+[spo file remove](./cmd/spo/file/file-remove.mdx) | `recycle` | `permanent`
+[spo folder remove](./cmd/spo/folder/folder-remove.mdx) | `recycle` | `permanent`
+[spo list remove](./cmd/spo/list/list-remove.mdx) | `recycle` | `permanent`
+[spo listitem batch remove](./cmd/spo/listitem/listitem-batch-remove.mdx) | `-r, --recycle` | `permanent`
+[spo listitem remove](./cmd/spo/listitem/listitem-remove.mdx) | `recycle` | `permanent`
+[spo page remove](./cmd/spo/page/page-remove.mdx) | `recycle` | `permanent`
+[spo site remove](./cmd/spo/site/site-remove.mdx) | `skipRecycleBin` | `permanent`
+
+On [entra m365group remove](./cmd/entra/m365group/m365group-remove.mdx) and [spo site remove](./cmd/spo/site/site-remove.mdx), the `skipRecycleBin` option still works, but it's deprecated and will be removed in a future major version.
+
+#### What action do I need to take?
+
+- Remove the `--recycle` option from your scripts. It's now the default behavior.
+- Specify `--permanent` wherever you intentionally delete items permanently. This is especially important for the commands that previously deleted permanently by default.
+- Replace `--skipRecycleBin` with `--permanent`.
